@@ -21,7 +21,7 @@ public class BaseTest {
 		System.setProperty("webdriver.chrome.driver", "D:\\kalyan's\\chromedriver_win32\\chromedriver.exe");
 		driver = new ChromeDriver();
 		
-		wait = new WebDriverWait(driver, 15);
+		wait = new WebDriverWait(driver, 10);
 		driver.manage().window().fullscreen();
 		driver.get("http://alpha.skopic.com/index/login.html ");
 		try {
