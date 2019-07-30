@@ -1,0 +1,826 @@
+
+	public static int start(DataProvider p) {
+	
+		System.out.println("start()");
+		logger = extent.createTest(p.getTestcaseID()+ "  " +p.getDescription());
+		logger.log(Status.INFO, p.getTestcaseID() + " Test case Execution started");
+		startTime = System.currentTimeMillis();
+		return (int) startTime;
+	}
+
+	public static int callDynamicBrowser(DataProvider p) throws Exception {
+
+	
+		try {
+			System.setProperty("webdriver.chrome.driver",
+					"D:\\Testing team\\files\\kalyan's\\Excel\\chromedriver_win32\\chromedriver.exe");
+			obj = new ChromeDriver();
+			obj.manage().deleteAllCookies();
+			obj.get(p.getData());
+			obj.manage().window().maximize();
+			logger.log(Status.INFO, "Opening browser Executed");
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			logger.log(Status.DEBUG, "Opening browser Executed");
+		}
+
+		return 0;
+
+	}
+
+	public static int navigate(DataProvider p) {
+
+		try {
+			obj.get(p.getData());
+			obj.manage().window().maximize();
+			logger.log(Status.INFO, "Navigate browser Executed");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			logger.log(Status.DEBUG, "Navigate browser Executed");
+		}
+		return (0);
+	}
+
+	public static int Block(DataProvider p) {
+
+		try {
+			obj.switchTo().alert().dismiss();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		return (0);
+	}
+
+	public static int waitFor(DataProvider p) throws Exception {
+		System.out.println("testdata" + p.getData());
+		long l = Long.parseLong(p.getData());
+		Thread.sleep(l);
+		logger.log(Status.INFO, "wait command Executed");
+		return (0);
+	}
+
+	public static int refresh(DataProvider p) {
+
+		try {
+			obj.navigate().refresh();
+			logger.log(Status.INFO, "Refresh page Executed");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return (0);
+	}
+
+	public static int waitFFor(DataProvider p) throws Exception {
+
+		WebDriverWait wait = new WebDriverWait(obj, 15);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='text3']")));
+		logger.log(Status.INFO, "wait command Executed");
+		return (0);
+	}
+
+	public static int timeDate(DataProvider p) throws Exception {
+		//extent.endTest(logger);
+	
+		stopTime = System.currentTimeMillis();
+		result1 = (stopTime - startTime) / 1000;
+		Calendar cal = Calendar.getInstance();
+		new java.util.Date();
+		day = cal.get(Calendar.DAY_OF_MONTH);
+		month = cal.get(Calendar.MONTH) + 1;
+		year = cal.get(Calendar.YEAR);
+		
+		logger.log(Status.INFO, "Test Case Execution completed");
+		return (3);
+	}
+
+	public static int close(DataProvider p) {
+		// purly selenium - key word
+		try {
+			obj.close();
+			logger.log(Status.INFO, "Browser is closed");
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return (0);
+	}
+
+	public static int quit(DataProvider p) {
+		try {
+			obj.quit();
+			logger.log(Status.INFO, "Browser is Quit");
+			
+		} catch (Exception e) {
+
+			obj.manage().deleteAllCookies();
+			obj.quit();
+		}
+		return (0);
+	}
+
+	public static int deleteCookies(DataProvider p) {
+		obj.manage().deleteAllCookies();
+		logger.log(Status.INFO, "cookies deleted");
+		return (0);
+	}
+
+	public static int testCookies(DataProvider p) {
+		int cs = obj.manage().getCookies().size();
+		logger.log(Status.INFO, "Cookies Tested");
+		if (cs != 0) {
+			return (7);
+		} else {
+			logger.log(Status.DEBUG, "Test Cookies");
+			return (8);
+		}
+	}
+
+	public static int implicitWait(DataProvider p) {
+		// logger.log(Status.INFO, "Implicit wait action performed");
+		long l = Long.parseLong(p.getData());
+		obj.manage().timeouts().implicitlyWait(l, TimeUnit.SECONDS);
+		logger.log(Status.INFO, "Implicitwait Executed");
+		return (0);
+	}
+
+	public static int checkBoxs(DataProvider p) throws Exception {
+		// logger.log(Status.INFO, "Select Checkbox action performed");
+
+		By xlsdata = getWebElement(p.getObject());
+		if (xlsdata == null) {
+			return (2);
+		}
+		List<WebElement> el = obj.findElements(xlsdata);
+		if (el.isEmpty()) {
+			logger.log(Status.DEBUG, "Check Box is NOT Selected");
+			return (10);
+		} else {
+			try {
+				WebDriverWait wait = new WebDriverWait(obj, 15);
+				wait.until(ExpectedConditions.visibilityOfElementLocated(xlsdata));
+				if (!obj.findElement(xlsdata).isSelected()) {
+					obj.findElement(xlsdata).click();
+					logger.log(Status.INFO, "Check Box is Selected");
+				}
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return 0;
+		}
+	}
+
+	public static int UncheckBoxs(DataProvider p) throws Exception {
+		// logger.log(Status.INFO, "Selected Checkbox uncheck action performed");
+
+		By xlsdata = getWebElement(p.getObject());
+		if (xlsdata == null) {
+			return (2);
+		}
+		List<WebElement> el = obj.findElements(xlsdata);
+		if (el.isEmpty()) {
+			System.out.println("Oh no! element not found ? = " + el);
+			logger.log(Status.DEBUG, "Check Box is NOT Selected");
+			return (10);
+		} else {
+			try {
+				WebDriverWait wait = new WebDriverWait(obj, 15);
+				wait.until(ExpectedConditions.visibilityOfElementLocated(xlsdata));
+				if (obj.findElement(xlsdata).isSelected()) {
+					obj.findElement(xlsdata).click();
+					logger.log(Status.INFO, "Check Box is UnSelected");
+				}
+				
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return 0;
+		}
+	}
+
+	// method of clear data
+	public static int clear(DataProvider p) throws Exception {
+
+		logger.log(Status.INFO, "Start action performed");
+
+		By xlsdata = getWebElement(p.getObject());
+		if (xlsdata == null) {
+			return (2);
+		}
+		List<WebElement> el = obj.findElements(xlsdata);
+		if (el.isEmpty()) {
+			logger.log(Status.DEBUG, "Check Box is NOT Selected");
+			return (10);
+		} else {
+			WebDriverWait wait = new WebDriverWait(obj, 15);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(xlsdata));
+			obj.findElement(xlsdata).clear();
+			logger.log(Status.INFO, "Clear the TEXT");
+			return (0);
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	public static String screenshot(DataProvider p) {
+		Calendar calendar = Calendar.getInstance();
+		SimpleDateFormat formater = new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss");
+		obj.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		String destination;
+		try {
+			TakesScreenshot ss1 = (TakesScreenshot) obj;
+			File Source = ss1.getScreenshotAs(OutputType.FILE);
+			 destination= "D:\\Testing team\\files\\kalyan's\\ScreenShot"	+ formater.format(calendar.getTime()) + "Screen.png";
+			Utils.copyFile(Source, new File(destination));
+			System.out.println(obj.manage().window().getSize());
+			logger.log(Status.INFO, "SceenShot");
+		} finally {
+			// TODO: handle finally clause
+		}
+		
+		return destination;
+
+	}
+
+	public static int defaultWindow(DataProvider p) throws Exception {
+		// obj.getPageSource();
+		obj.switchTo().defaultContent();
+		obj.getPageSource();
+		if (obj.getPageSource().contains("invite")) {
+			System.out.println("Pass");
+		} else {
+			System.out.println("Fail");
+		}
+		// obj.switchTo().Window(obj.manage()[0]);
+		return 0;
+	}
+
+	public static int uploadfile(DataProvider p) throws Exception {
+		obj.get("http://www.2shared.com/");
+		String FilePath = "C:\\Users\\abc\\Desktop\\test.xml";
+		obj.findElement(By.id("upField")).sendKeys(FilePath);
+		obj.findElement(By.xpath("//input[@type='image']")).click();
+		return 0;
+	}
+
+	public static int scrollToBottom(DataProvider p) throws Exception {
+		try {
+			JavascriptExecutor jse = (JavascriptExecutor) obj;
+			jse.executeScript("window.scrollBy(0,500)", "");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public static int scrollToelement(DataProvider p) throws Exception {
+		// logger.log(Status.INFO, "Start action performed");
+
+		try {
+			JavascriptExecutor jse = (JavascriptExecutor) obj;
+			jse.executeScript("window.scrollBy(0,-250)", "");
+			((JavascriptExecutor) obj).executeScript("arguments[0].scrollIntoView();", p.getObject());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public static int negativevalidation(DataProvider p) throws Exception {
+		// logger.log(Status.INFO, "Start action performed");
+		By xlsdata = getWebElement(p.getObject());
+		if (xlsdata == null) {
+			return (2);
+		}
+		try {
+			obj.findElement(xlsdata).isDisplayed();
+			logger.log(Status.INFO, "Negative Validation");
+			return 2;
+		} catch (NoSuchElementException ignored) {
+			return 1;
+		} catch (StaleElementReferenceException ignored) {
+			return 1;
+		}
+	}
+
+	public static int sizeWindow(DataProvider p) throws Exception {
+		Dimension d = new Dimension(700, 700);
+		obj.manage().window().setSize(d);
+		Thread.sleep(5000);
+		return 0;
+	}
+
+	public static int viewalert(DataProvider p) {
+		try {
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		return (0);
+	}
+
+	public static int compare(DataProvider p) throws Exception {
+		return 0;
+
+	}
+
+	public static int input(DataProvider p) throws Exception {
+		By xlsdata = getWebElement(p.getObject());
+		if (xlsdata == null) {
+			return (2);
+		}
+		List<WebElement> el = obj.findElements(xlsdata);
+			if (el.isEmpty()) {
+				System.out.println("Oh no! element not found ? = " + el);
+				logger.log(Status.DEBUG, "Oh no! element not found ? = ");
+			return (10);
+		} else {
+			try {
+				WebDriverWait wait = new WebDriverWait(obj, 15);
+				wait.until(ExpectedConditions.visibilityOfElementLocated(xlsdata));
+				obj.findElement(xlsdata).sendKeys(p.getData());
+				logger.log(Status.INFO, "Input Method");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				logger.log(Status.DEBUG, "no input found");
+			}
+			return (0);
+		}
+	}
+
+	public static int click(DataProvider p) throws Exception {
+		// logger.log(Status.INFO, "Start action performed");
+		By xlsdata = getWebElement(p.getObject());
+		if (xlsdata == null) {
+			return (2);
+		}
+		List<WebElement> el = obj.findElements(xlsdata);
+		if (el.isEmpty()) {
+			logger.log(Status.DEBUG, "no element no element found   found");
+			return (10);
+		} else {
+			try {
+				WebDriverWait wait = new WebDriverWait(obj, 15);
+				wait.until(ExpectedConditions.visibilityOfElementLocated(xlsdata));
+				obj.findElement(xlsdata).click();
+				logger.log(Status.INFO, "Click Method");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				logger.log(Status.DEBUG, "no click found");
+			}
+			return (0);
+		}
+	}
+
+	public static int textContains(DataProvider p) throws Exception {
+		// logger.log(Status.INFO, "Start action performed");
+		return (0);
+
+	}
+
+	public static int pageSource(DataProvider p) {
+		// logger.log(Status.INFO, "pageSource action performed");
+		obj.getPageSource();
+		if (obj.getPageSource().contains(p.getData())) {
+			{
+				return (1);
+			}
+		} else {
+			return (2);
+		}
+	}
+
+	public static int validation(DataProvider p) {
+		// logger.log(Status.INFO, "Start action performed");
+		By xlsdata = getWebElement(p.getObject());
+		if (xlsdata == null) {
+			return (2);
+		}
+		try {
+			List<WebElement> el = obj.findElements(xlsdata);
+			if (el.isEmpty()) {
+				m= MethodActions.screenshot(p);
+				try {
+					logger.log(Status.FAIL, logger.addScreencastFromPath(m)+"Test Case FAIL");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return (2);
+			} else {
+				try {
+					WebDriverWait wait = new WebDriverWait(obj, 15);
+					wait.until(ExpectedConditions.visibilityOfElementLocated(xlsdata));
+					obj.findElement(xlsdata).isDisplayed();
+					calldata1 = p.getActual();
+					logger.log(Status.PASS, "Test Case Passes");
+					
+					return 1;
+				} catch (Exception e) {
+					sa.assertEquals(true,false);
+					m= MethodActions.screenshot(p);
+					
+						try {
+							logger.log(Status.FAIL, logger.addScreencastFromPath(m)+"Test Case FAIL");
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return 2;
+				}
+			}
+		} catch (NoSuchElementException ignored) {
+			return 6;
+		} catch (StaleElementReferenceException ignored) {
+			return 2;
+		}
+
+	}
+
+	public static int getText(DataProvider p) throws InterruptedException, Exception {
+		// logger.log(Status.INFO, "Start action performed");
+		By xlsdata = getWebElement(p.getObject());
+		if (xlsdata == null) {
+			return (2);
+		}
+		try {
+			List<WebElement> el = obj.findElements(xlsdata);
+			if (el.isEmpty()) {
+				m= MethodActions.screenshot(p);
+				try {
+					logger.log(Status.FAIL, logger.addScreencastFromPath(m)+"Test Case FAIL");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return (10);
+			} else {
+				try {
+					WebDriverWait wait = new WebDriverWait(obj, 15);
+					wait.until(ExpectedConditions.visibilityOfElementLocated(xlsdata));
+					calldata = obj.findElement(xlsdata).getText().toString();
+					calldata1 = p.getActual();
+					Assert.assertEquals(calldata, calldata1);
+					logger.log(Status.PASS, "Test Case Passes");
+					
+					return 6;
+				} catch (Exception e) {
+					sa.assertEquals(true,false);
+					m= MethodActions.screenshot(p);
+				
+						logger.log(Status.FAIL, logger.addScreencastFromPath(m)+"Test Case FAIL");
+					
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return 2;
+				}
+
+			}
+		} catch (NoSuchElementException ignored) {
+			return 6;
+		} catch (StaleElementReferenceException ignored) {
+			return 2;
+		}
+
+	}
+
+	
+
+	public static int alertCheck(DataProvider p) throws InterruptedException, Exception {
+		// logger.log(Status.INFO, "Start action performed");
+		try {
+			WebDriverWait wait = new WebDriverWait(obj, 0);
+			wait.until(ExpectedConditions.alertIsPresent());
+			Alert alert = obj.switchTo().alert();
+			alert.accept();
+			logger.log(Status.INFO, "Alert pop up is checked");
+		} catch (Exception e) {
+			Exception handling;
+		}
+		return 0;
+
+	}
+
+	public static int toolTip(DataProvider p) throws InterruptedException, Exception {
+		// logger.log(Status.INFO, "Start action performed");
+		return (0);
+
+	}
+
+	public static int actualResulttext(DataProvider p) throws InterruptedException, Exception {
+		// logger.log(Status.INFO, "Start action performed");
+		String pageSource = obj.getPageSource();
+		if (pageSource.contains(p.getActual())) {
+			try {
+				AssertJUnit.assertEquals(p.getActual(), pageSource);
+			} catch (AssertionError e) {
+				if (pageSource.contains(p.getActual())) {
+					result2 = p.getActual();
+					return (5);
+				}
+			}
+		}
+		if (pageSource.contains(p.getActual())) {
+			result2 = p.getActual();
+			return (5);
+		} else {
+			return (2);
+		}
+
+	}
+
+	public static int actualResulttextwindow(DataProvider p) throws InterruptedException, Exception {
+		// logger.log(Status.INFO, "Start action performed");
+		obj.getPageSource();
+		String myWindowHandle = obj.getWindowHandle();
+		obj.switchTo().window(myWindowHandle);
+		if (myWindowHandle.contains(p.getActual())) {
+			try {
+				AssertJUnit.assertEquals(p.getActual(), myWindowHandle);
+			} catch (AssertionError e) {
+				if (myWindowHandle.contains(p.getActual())) {
+					result2 = p.getActual();
+					return (5);
+				}
+			}
+		}
+		if (myWindowHandle.contains(p.getActual())) {
+			result2 = p.getActual();
+			return (5);
+		} else {
+			return (2);
+		}
+
+	}
+
+	public static int actualResult(DataProvider p) {
+		// logger.log(Status.INFO, "Start action performed");
+		By xlsdata = getWebElement(p.getObject());
+		if (xlsdata == null) {
+			return (2);
+		}
+		obj.findElement(xlsdata).isDisplayed(); //
+		// System.out.println("is web element present ? = " + el);
+		logger.log(Status.INFO, "ActualResult is Displayed");
+		return (1);
+
+	}
+
+	public static int tabClick1(DataProvider p) throws InterruptedException, Exception {
+		Robot r = new Robot();			
+		r.keyPress(KeyEvent.VK_TAB);			
+		r.keyRelease(KeyEvent.VK_TAB);
+		logger.log(Status.INFO, "TAB is clicked");
+		return (0);
+
+	}
+
+	public static int tab28(DataProvider p) throws InterruptedException, Exception {
+		Robot r = new Robot();
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+
+		Thread.sleep(2000);
+		r.keyPress(KeyEvent.VK_TAB);
+		r.keyRelease(KeyEvent.VK_TAB);
+
+		return (0);
+	}
+
+	public static int scroll(DataProvider p) throws InterruptedException, Exception {
+		String parent = obj.getWindowHandle();
+		for (String handle : obj.getWindowHandles()) {
+			obj.switchTo().window(handle);
+			JavascriptExecutor js = (JavascriptExecutor) obj;
+			js.executeScript("window.scrollBy(0,100)");
+			logger.log(Status.INFO, "Page Scrolled");
+		}
+		return (0);
+	}
+
+	public static int enterClick1(DataProvider p) throws InterruptedException, Exception {
+		Robot r = new Robot();
+		r.keyPress(KeyEvent.VK_ENTER);
+		r.keyRelease(KeyEvent.VK_ENTER);
+		logger.log(Status.INFO, "ENTER is clicked");
+		return (0);
+	}
+
+	public static int enterDown1(DataProvider p) throws InterruptedException, Exception {
+		Robot r = new Robot();
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		logger.log(Status.INFO, "Down is clicked");
+		return (0);
+	}
+
+	public static int enterSpace1(DataProvider p) throws InterruptedException, Exception {
+		Robot r = new Robot();
+		r.keyPress(KeyEvent.VK_SPACE); // fire spacebar event
+		r.keyRelease(KeyEvent.VK_SPACE);
+		logger.log(Status.INFO, "TAB is clicked");
+		return (0);
+	}
+
+	public static int visiblein(DataProvider p) throws InterruptedException, Exception {
+		By xlsdata = getWebElement(p.getObject());
+		if (xlsdata == null) {
+			return (2);
+		}
+		try {
+			JavascriptExecutor js = ((JavascriptExecutor) obj); //
+			// wait.until(presenceOfElementLocated(xlsdata));
+			WebElement hiddenButton = obj.findElement(xlsdata);
+			Thread.sleep(3000);
+			String script = "arguments[0].click();";
+			js.executeScript(script, hiddenButton);
+			System.out.println("is hiddenButton present ? = " + hiddenButton);
+			System.out.println("element to execute = " + xlsdata);
+			System.out.println("data = " + p.getData());
+			System.out.println("object = " + p.getObject());
+			System.out.println("expected = " + p.getExpected());
+
+			System.out.println("actualresult = " + p.getActual());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public static int visibled(DataProvider p) throws InterruptedException, Exception {
+		By xlsdata = getWebElement(p.getObject());
+		if (xlsdata == null) {
+			return (2);
+		} 	
+		JavascriptExecutor js = ((JavascriptExecutor) obj); //
+		// wait.until(presenceOfElementLocated(xlsdata));
+		WebElement hiddenButton = obj.findElement(xlsdata);
+		Thread.sleep(3000);
+		String script = "arguments[0].isDisplayed();";
+		js.executeScript(script, hiddenButton);
+		System.out.println("is hidden button ? = " + hiddenButton);
+		System.out.println("element to execute = " + xlsdata);
+		System.out.println("data = " + p.getData());
+		System.out.println("object =" + p.getObject());
+		System.out.println("expected =" + p.getExpected());
+
+		System.out.println("actualresult = " + p.getActual());
+		return 1;
+	}
+
+	private static By getWebElement(String webEle) {
+		By xlsdata = null;
+		try {
+			if (webEle.contains("id")) {
+				xlsdata = By.id(webEle.substring(3));
+			} else if (webEle.contains("name")) {
+				xlsdata = By.name(webEle.substring(5));
+			} else if (webEle.contains("xpath")) {
+				xlsdata = By.xpath(webEle.substring(6));
+			} else if (webEle.contains("linkText")) {
+				xlsdata = By.linkText(webEle.substring(9));
+			} else if (webEle.contains("cssSelector")) {
+				xlsdata = By.cssSelector(webEle.substring(12));
+			} else if (webEle.contains("partialLinkText")) {
+				xlsdata = By.partialLinkText(webEle.substring(16));
+			} else if (webEle.contains("className")) {
+				xlsdata = By.className(webEle.substring(10));
+			} else if (webEle.contains("tagName")) {
+				xlsdata = By.tagName(webEle.substring(8));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return xlsdata;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		@Test(priority=1)
+	public void homePageTitleTest(){
+		page.getInstance(LoginPage.class).doLogin("naveenanimation20@gmail.com", "Test@1234");
+		String title = page.getInstance(HomePage.class).getHomePageTitle();
+		System.out.println("home page title is: " + title);
+		Assert.assertEquals(title, "Reports dashboard");
+	}
+	
+	@Test(priority=2)
+	public void verifyHomePageHeaderTest(){
+		page.getInstance(LoginPage.class).doLogin("naveenanimation20@gmail.com", "Test@1234");
+		String header = page.getInstance(HomePage.class).getHomePageHeader();
+		System.out.println("home page header is: "+ header);
+		Assert.assertEquals(header, "Sales Dashboard");
+	}
+	
+}
